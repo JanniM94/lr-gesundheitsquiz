@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1a1a1a">
+  <title>Wie gesund ist dein inneres System? · LR Health &amp; Beauty</title>
+  <meta name="description" content="Wissensquiz über Darm, Leber und Zellstoffwechsel, ein Beschwerdenquiz ohne Diagnose und die Folgen von Manifestieren mit Christina als Leseseiten.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=nav">
+</head>
+<body>
+  <a class="skip" href="#app">Zum Inhalt</a>
+  <header class="site-header">
+    <a class="logo" href="https://www.lrworld.com/de-de" target="_blank" rel="noopener noreferrer">
+      <img src="assets/logo.svg" alt="LR Health &amp; Beauty" width="136" height="136">
+    </a>
+    <p class="header-label">Gesundheitsquiz</p>
+    <ol class="journey" id="journey" aria-label="Ablauf"></ol>
+    <a class="text-btn" href="blog/index.html">Blog</a>
+    <button class="text-btn" type="button" id="lexicon-btn" aria-pressed="false">Symptome A–Z</button>
+    <button class="text-btn" type="button" id="restart-btn" hidden>Neu starten</button>
+  </header>
+  <main id="app"></main>
+  <div id="live" class="sr-only" aria-live="polite"></div>
+  <footer class="site-footer">
+    <p>Dieses Quiz dient ausschließlich der allgemeinen Gesundheitsbildung und ersetzt keine medizinische Beratung, Diagnose oder Behandlung.</p>
+    <p>Es werden keine Namen, Kontaktdaten oder Gesundheitsdaten erhoben. Dein Fortschritt bleibt nur in diesem Browser gespeichert.</p>
+    <p>Bildungsinhalte in vereinfachter Form. Orientierung unter anderem an Veröffentlichungen der <a href="https://www.dge.de" target="_blank" rel="noopener noreferrer">Deutschen Gesellschaft für Ernährung</a>, der <a href="https://www.efsa.europa.eu" target="_blank" rel="noopener noreferrer">European Food Safety Authority</a>, der <a href="https://ods.od.nih.gov" target="_blank" rel="noopener noreferrer">National Institutes of Health</a> und der <a href="https://www.who.int" target="_blank" rel="noopener noreferrer">Weltgesundheitsorganisation</a>.</p>
+  </footer>
+  <dialog id="restart-dialog" aria-labelledby="restart-title">
+    <h2 id="restart-title">Quiz neu starten?</h2>
+    <p>Dein aktueller Fortschritt in diesem Browser wird gelöscht.</p>
+    <div class="actions">
+      <button class="btn btn-ghost" type="button" id="restart-cancel">Abbrechen</button>
+      <button class="btn" type="button" id="restart-confirm">Neu starten</button>
+    </div>
+  </dialog>
+  <noscript><p style="padding:24px">Bitte aktiviere JavaScript, um das Gesundheitsquiz zu nutzen.</p></noscript>
+  <script src="js/data.js"></script>
+  <script src="js/illustrations.js"></script>
+  <script src="js/lexicon.js"></script>
+  <script src="js/app.js?v=nav"></script>
+</body>
+</html>
