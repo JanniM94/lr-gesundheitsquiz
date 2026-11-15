@@ -195,12 +195,12 @@ def page(episode, earlier, later):
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="../index.html">Innenwelt</a>
-    <nav>
-      <a href="../../index.html">Wissensquiz</a>
-      <a href="../index.html">Alle Folgen</a>
-      <a href=\"""" + SHOW + """\" target="_blank" rel="noopener noreferrer">Spotify</a>
+    <a class="brand" href="../../index.html">Start</a>
+    <nav class="site-nav" aria-label="Bereiche">
+      <a href="../../index.html#folgen" aria-current="page">Podcast</a>
+      <a href="../../index.html#quiz">Wissensquiz</a>
     </nav>
+    <a class="nav-spotify" href=\"""" + SHOW + """\" target="_blank" rel="noopener noreferrer">Auf Spotify</a>
   </header>
   <main>
     <p class="eyebrow">Manifestieren mit Christina""" + ((" · " + html.escape(episode["date"])) if episode["date"] else "") + """</p>
@@ -212,7 +212,7 @@ def page(episode, earlier, later):
     <div class="notes">""" + desc + """</div>
     <p class="note">Das ist der veröffentlichte Folgenhinweis, keine wortgetreue Abschrift der Aufnahme. Die ganze Folge hörst du über den Link.</p>
     """ + nav + """
-    <p class="quiz-link"><a href="../../index.html">Zum Wissensquiz über den Körper</a></p>
+    <p class="quiz-link"><a href="../../index.html#quiz">Zum Wissensquiz über den Körper</a></p>
   </main>
 </body>
 </html>
@@ -266,18 +266,18 @@ def main():
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="index.html">Innenwelt</a>
-    <nav>
-      <a href="../index.html">Wissensquiz</a>
-      <a href=\"""" + SHOW + """\" target="_blank" rel="noopener noreferrer">Spotify</a>
+    <a class="brand" href="../index.html">Start</a>
+    <nav class="site-nav" aria-label="Bereiche">
+      <a href="../index.html#folgen" aria-current="page">Podcast</a>
+      <a href="../index.html#quiz">Wissensquiz</a>
     </nav>
+    <a class="nav-spotify" href=\"""" + SHOW + """\" target="_blank" rel="noopener noreferrer">Auf Spotify</a>
   </header>
   <main>
-    <p class="eyebrow">Manifestieren mit Christina</p>
-    <h1>Folgen zum Lesen und Anhören.</h1>
-    <p class="lead">Hier liegen die veröffentlichten Folgenhinweise als einzelne Seiten, jede mit direktem Hörlink. Die Innenwelt der Seele bleibt Persönlichkeitsentwicklung. Die Innenwelt des Körpers bleibt das Wissensquiz. Manifestieren behandelt keine Krankheit.</p>
-    <figure class="art">""" + graphic("Folgen zum Lesen und Anhören", "cover.jpg") + """</figure>
-    <p><a class="btn" href="../index.html">Zum Wissensquiz</a></p>
+    <p class="eyebrow">Podcast · Manifestieren mit Christina</p>
+    <h1>Alle Folgen zum Lesen.</h1>
+    <p class="lead">Die Startseite stellt den Podcast und das Wissensquiz nebeneinander. Hier ist die vollständige Liste mit Hörlink. Manifestieren ist Persönlichkeitsentwicklung und behandelt keine Krankheit.</p>
+    <p><a class="btn" href=\"""" + SHOW + """\" target="_blank" rel="noopener noreferrer">Auf Spotify anhören</a> <a class="btn btn-ghost" href="../index.html#quiz">Zum Wissensquiz</a></p>
     <label for="filter">Folge suchen</label>
     <input id="filter" type="search" placeholder="Titel oder Stichwort">
     <ul class="episodes" id="episodes">

@@ -28,6 +28,7 @@
   ];
 
   let state = load();
+  let podcastFocus = false;
   let autoplayOn = !reducedMotion;
   let autoplayTimer = null;
 
@@ -38,10 +39,27 @@
   app.addEventListener("input", onInput);
   document.addEventListener("keydown", onKey);
   document.getElementById("lexicon-btn").addEventListener("click", toggleLexicon);
+  document.getElementById("home-link").addEventListener("click", function (event) {
+    event.preventDefault();
+    goToPhase("welcome");
+  });
+  document.getElementById("nav-podcast").addEventListener("click", function (event) {
+    event.preventDefault();
+    if (current().type !== "welcome" || state.lexiconOpen || state.symptomOpen) goToPhase("welcome");
+    podcastFocus = true;
+    paintChrome();
+    window.requestAnimationFrame(function () {
+      const folgen = document.getElementById("folgen");
+      if (folgen) folgen.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+    });
+  });
   document.getElementById("journey").addEventListener("click", function (event) {
     const btn = event.target.closest("[data-phase]");
     if (!btn) return;
     goToPhase(btn.dataset.phase);
+  });
+  document.getElementById("nav-quiz").addEventListener("click", function () {
+    goToPhase("quiz");
   });
   document.getElementById("restart-btn").addEventListener("click", function () {
     document.getElementById("restart-dialog").showModal();
@@ -165,7 +183,7 @@
 
   function titleFor(type) {
     const map = {
-      welcome: "Wie gesund ist dein inneres System?",
+      welcome: "Podcast und Wissensquiz",
       pillars: "Drei Systeme",
       question: "Gesundheitsquiz",
       aha: "Aha-Moment",
@@ -177,17 +195,26 @@
   }
 
   function paintChrome() {
+    const onHome = current().type === "welcome" && !state.lexiconOpen && !state.symptomOpen;
+    document.getElementById("quiz-bar").hidden = onHome;
+    const quizNav = document.getElementById("nav-quiz");
+    const podcastNav = document.getElementById("nav-podcast");
+    quizNav.classList.toggle("is-current", !onHome);
+    podcastNav.classList.toggle("is-current", onHome && podcastFocus);
+    if (onHome) quizNav.removeAttribute("aria-current");
+    else quizNav.setAttribute("aria-current", "page");
+    if (onHome && podcastFocus) podcastNav.setAttribute("aria-current", "page");
+    else podcastNav.removeAttribute("aria-current");
     const phase = phaseId(current().type);
     const index = state.lexiconOpen || state.symptomOpen ? -1 : PHASES.findIndex(function (p) { return p.id === phase; });
-    document.getElementById("journey").innerHTML = PHASES.map(function (p, i) {
+    document.getElementById("journey").innerHTML = PHASES.filter(function (p) { return p.id !== "welcome"; }).map(function (p) {
+      const i = PHASES.findIndex(function (item) { return item.id === p.id; });
       const cls = i === index ? "is-current" : !state.lexiconOpen && !state.symptomOpen && i < index ? "is-done" : "";
       return '<li class="' + cls + '"' + (i === index ? ' aria-current="step"' : "") + "><button type=\"button\" class=\"journey-btn\" data-phase=\"" + p.id + "\">" + esc(p.label) + "</button></li>";
     }).join("");
     document.getElementById("restart-btn").hidden = state.step === 0 && !state.lexiconOpen;
     const lexBtn = document.getElementById("lexicon-btn");
-    lexBtn.innerHTML = state.lexiconOpen
-      ? '<span class="lex-long">Zum Quiz</span><span class="lex-short">Quiz</span>'
-      : '<span class="lex-long">Symptome A–Z</span><span class="lex-short">A–Z</span>';
+    lexBtn.textContent = state.lexiconOpen ? "Zurück zum Quiz" : "Symptome A–Z";
     lexBtn.setAttribute("aria-label", state.lexiconOpen ? "Zurück zum Quiz" : "Symptome von A bis Z");
     lexBtn.setAttribute("aria-pressed", String(state.lexiconOpen));
   }
@@ -202,28 +229,45 @@
     return viewLifestyle();
   }
 
+  function episodeItems() {
+    const episodes = globalThis.LR_EPISODES || [];
+    return episodes.map(function (episode) {
+      return '<li><a href="blog/' + esc(episode.href) + '"><time>' + esc(episode.date) + "</time>" + esc(episode.title) + "</a></li>";
+    }).join("");
+  }
+
   function viewWelcome() {
     return (
-      '<section class="screen welcome">' +
-      '<div class="atmosphere" aria-hidden="true">' +
-      '<span class="orb orb-a"></span><span class="orb orb-b"></span>' +
-      '<span class="mote"></span><span class="mote"></span><span class="mote"></span><span class="mote"></span><span class="mote"></span>' +
-      "</div>" +
-      '<div class="hero-grid">' +
-      "<div>" +
-      '<p class="eyebrow">LR Health &amp; Beauty · Wissensquiz</p>' +
-      "<h1>Wie gesund ist dein inneres System?</h1>" +
-      '<p class="lead">Darm, Leber und Zellstoffwechsel arbeiten jeden Tag zusammen. Entdecke spielerisch, was in deinem Körper passiert und warum dieses Zusammenspiel so wichtig für dein Wohlbefinden ist.</p>' +
-      '<div class="actions"><button class="btn" type="button" data-action="next">Jetzt Gesundheitsquiz starten</button>' +
+      '<section class="screen home" id="start">' +
+      '<p class="eyebrow">Zwei getrennte Angebote</p>' +
+      "<h1>Podcast und Wissensquiz.</h1>" +
+      '<p class="lead">Oben wählst du den Bereich. Der Podcast ist Persönlichkeitsentwicklung und verlinkt auf Spotify. Das Quiz prüft Wissen über Darm, Leber und Zellstoffwechsel. Es misst keinen Gesundheitszustand und stellt keine Diagnose. Manifestieren behandelt keine Krankheit.</p>' +
+      '<div class="doors">' +
+      '<article class="door door-podcast" id="podcast">' +
+      '<img class="cover" src="blog/cover.jpg" alt="Cover des Podcasts Manifestieren mit Christina">' +
+      '<p class="eyebrow">Podcast</p>' +
+      "<h2>Manifestieren mit Christina</h2>" +
+      "<p>Gespräche über Haltung, Alltag, Beziehungen und das Gesetz der Anziehung. Zu jeder Folge gibt es hier eine Leseseite mit dem veröffentlichten Hinweis und den direkten Link zur Aufnahme.</p>" +
+      '<div class="actions"><a class="btn" href="https://open.spotify.com/show/0AzxkQ7j5SOGM7yu6dJdGi" target="_blank" rel="noopener noreferrer">Auf Spotify anhören</a>' +
+      '<a class="btn btn-ghost" href="#folgen">Folgen ansehen</a></div>' +
+      "</article>" +
+      '<article class="door door-quiz" id="quiz">' +
+      '<p class="eyebrow">Wissensquiz</p>' +
+      "<h2>Wie gesund ist dein inneres System?</h2>" +
+      "<p>15 Fragen dazu, wie Darm, Leber und Zellen zusammenarbeiten. Der Punktestand zählt richtige Antworten, nicht dein Befinden.</p>" +
+      '<div class="actions"><button class="btn" type="button" data-action="next">Quiz starten</button>' +
       '<button class="btn btn-ghost" type="button" data-action="symptom">Nach Beschwerden fragen</button>' +
-      '<button class="btn btn-ghost" type="button" data-action="lexicon">Symptome von A bis Z</button>' +
-      '<a class="btn btn-ghost" href="blog/index.html">Innenwelt und Folgen</a></div>' +
-      '<p class="meta-line">5–8 Minuten · 15 spannende Fragen · Überraschende Aha-Momente</p>' +
-      '<p class="fine">Ein Wissensquiz über deinen Körper, kein Test deines Gesundheitszustands. Dieses Quiz dient ausschließlich der allgemeinen Gesundheitsbildung und ersetzt keine medizinische Beratung, Diagnose oder Behandlung.</p>' +
-      "</div>" +
-      "<figure class=\"hero-art\">" + ART.hero() +
-      '<ul class="legend"><li><i class="swatch liver"></i> Leber</li><li><i class="swatch gut"></i> Darm</li><li><i class="swatch cell"></i> Zellen</li></ul>' +
-      "</figure></div></section>"
+      '<button class="btn btn-ghost" type="button" data-action="lexicon">Symptome von A bis Z</button></div>' +
+      '<p class="fine">5–8 Minuten. Allgemeine Gesundheitsbildung. Dieses Quiz ersetzt keine medizinische Beratung, Diagnose oder Behandlung.</p>' +
+      "</article></div>" +
+      '<section class="folgen" id="folgen">' +
+      '<p class="eyebrow">Podcast</p>' +
+      "<h2>Die einzelnen Folgen</h2>" +
+      "<p>Jede Seite übernimmt den veröffentlichten Folgenhinweis, keine wortgetreue Abschrift. Die Aufnahme selbst hörst du auf Spotify.</p>" +
+      '<label class="episode-label" for="episode-filter">Folge suchen</label>' +
+      '<input class="episode-filter" id="episode-filter" type="search" placeholder="Titel oder Stichwort">' +
+      '<ul class="episode-list">' + episodeItems() + "</ul>" +
+      "</section></section>"
     );
   }
 
@@ -686,6 +730,13 @@
   }
 
   function onInput(event) {
+    if (event.target && event.target.id === "episode-filter") {
+      const query = fold(event.target.value);
+      app.querySelectorAll(".episode-list li").forEach(function (item) {
+        item.hidden = query.length > 0 && fold(item.textContent).indexOf(query) === -1;
+      });
+      return;
+    }
     if (event.target && event.target.id === "symptom-search") {
       state.symptomQuery = event.target.value.slice(0, 80);
       persist();
@@ -1040,6 +1091,7 @@
   }
 
   function goToPhase(id) {
+    podcastFocus = false;
     state.lexiconOpen = false;
     state.symptomOpen = false;
     state.freeNav = true;
