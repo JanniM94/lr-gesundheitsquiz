@@ -239,9 +239,12 @@
   function viewWelcome() {
     return (
       '<section class="screen home" id="start">' +
-      '<p class="eyebrow">Zwei getrennte Angebote</p>' +
-      "<h1>Podcast und Wissensquiz.</h1>" +
-      '<p class="lead">Oben wählst du den Bereich. Der Podcast ist Persönlichkeitsentwicklung und verlinkt auf Spotify. Das Quiz prüft Wissen über Darm, Leber und Zellstoffwechsel. Es misst keinen Gesundheitszustand und stellt keine Diagnose. Manifestieren behandelt keine Krankheit.</p>' +
+      '<header class="home-hero">' +
+      '<p class="mark">Christina · Innenwelt</p>' +
+      '<h1 class="home-title"><span>Podcast</span><em>und Wissen</em></h1>' +
+      '<p class="deck">Der Podcast für Haltung und Alltag. Das Quiz für Darm, Leber und Zellen.</p>' +
+      '<p class="fine home-note">Manifestieren ist Persönlichkeitsentwicklung und behandelt keine Krankheit. Das Quiz misst Wissen, nicht deinen Gesundheitszustand, und stellt keine Diagnose.</p>' +
+      "</header>" +
       '<div class="doors">' +
       '<article class="door door-podcast" id="podcast">' +
       '<img class="cover" src="blog/cover.jpg" alt="Cover des Podcasts Manifestieren mit Christina">' +

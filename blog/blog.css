@@ -1,9 +1,12 @@
 :root {
-  --ink: #1a1a1a;
-  --paper: #f4f1ec;
-  --muted: #5c574f;
-  --line: #e4dfd8;
+  --ink: #2c261f;
+  --paper: #f6f1e7;
+  --gold: #b8956a;
+  --blush: #f3ddd4;
+  --muted: #8a7358;
+  --line: #e6d8c4;
   --font: Inter, Helvetica, Arial, sans-serif;
+  --serif: "Playfair Display", Georgia, serif;
 }
 
 * { box-sizing: border-box; }
@@ -11,7 +14,7 @@
 body {
   margin: 0;
   color: var(--ink);
-  background: #fff;
+  background: var(--paper);
   font-family: var(--font);
   line-height: 1.5;
 }
@@ -25,7 +28,7 @@ a { color: inherit; }
   align-items: center;
   padding: 14px 22px;
   border-bottom: 1px solid var(--line);
-  background: #fafafa;
+  background: rgba(246, 241, 231, 0.94);
 }
 
 .brand {
@@ -38,36 +41,34 @@ a { color: inherit; }
 
 .site-nav {
   display: flex;
+  gap: 22px;
   margin-left: auto;
-  border: 1px solid var(--ink);
 }
 
 .site-nav a {
   display: inline-flex;
   align-items: center;
   min-height: 40px;
-  padding: 0 16px;
+  padding: 0;
   text-decoration: none;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  color: var(--gold);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  border-bottom: 1px solid transparent;
 }
 
-.site-nav a + a { border-left: 1px solid var(--ink); }
-
 .site-nav a[aria-current="page"] {
-  background: var(--ink);
-  color: #fff;
+  color: var(--ink);
+  border-bottom-color: var(--gold);
 }
 
 .nav-spotify {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   text-decoration: none;
-  border-bottom: 1px solid var(--ink);
+  color: var(--gold);
 }
 
 
@@ -87,9 +88,11 @@ main {
 
 h1 {
   margin: 0 0 12px;
-  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2.4rem, 5vw, 4rem);
   line-height: 1.05;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
 h2 { margin: 28px 0 8px; font-size: 1.25rem; }
@@ -124,8 +127,12 @@ h2 { margin: 28px 0 8px; font-size: 1.25rem; }
   min-height: 46px;
   align-items: center;
   padding: 0 16px;
-  background: var(--ink);
-  color: #fff;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--ink);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
   text-decoration: none;
 }
 
