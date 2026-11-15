@@ -247,11 +247,28 @@ def main():
         later = episodes[index - 1] if index > 0 else None
         with open(os.path.join(FOLGEN, episode["slug"] + ".html"), "w", encoding="utf-8") as handle:
             handle.write(page(episode, earlier, later))
-    items = []
-    for episode in episodes:
-        items.append(
-            '<li><a href="folgen/' + episode["slug"] + '.html"><time>' + html.escape(episode["date"]) + "</time>" + html.escape(episode["title"]) + "</a></li>"
+    def item(episode):
+        return '<li><a href="folgen/' + episode["slug"] + '.html"><time>' + html.escape(episode["date"]) + "</time>" + html.escape(episode["title"]) + "</a></li>"
+
+    latest = "\n      ".join(item(episode) for episode in episodes[:5])
+    grouped = {}
+    year_order = []
+    for episode in episodes[5:]:
+        found = re.search(r"(\d{4})", episode["date"])
+        year = found.group(1) if found else "Weitere"
+        if year not in grouped:
+            grouped[year] = []
+            year_order.append(year)
+        grouped[year].append(episode)
+    archive = []
+    for year in year_order:
+        count = len(grouped[year])
+        label = "Folge" if count == 1 else "Folgen"
+        archive.append(
+            '<details class="year-group"><summary>' + year + "<span>" + str(count) + " " + label + '</span></summary><ul class="episodes">'
+            + "".join(item(episode) for episode in grouped[year]) + "</ul></details>"
         )
+    archive_html = "\n      ".join(archive)
     index_html = """<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -280,15 +297,25 @@ def main():
     <p><a class="btn" href=\"""" + SHOW + """\" target="_blank" rel="noopener noreferrer">Auf Spotify anhören</a> <a class="btn btn-ghost" href="../index.html#quiz">Zum Wissensquiz</a></p>
     <label for="filter">Folge suchen</label>
     <input id="filter" type="search" placeholder="Titel oder Stichwort">
+    <p class="eyebrow">Zuletzt erschienen</p>
     <ul class="episodes" id="episodes">
-      """ + "\n      ".join(items) + """
+      """ + latest + """
     </ul>
+    <div class="archive">
+      <p class="eyebrow">Nach Jahren</p>
+      """ + archive_html + """
+    </div>
   </main>
   <script>
     document.getElementById("filter").addEventListener("input", function (event) {
       var query = event.target.value.toLowerCase();
-      document.querySelectorAll("#episodes li").forEach(function (item) {
+      document.querySelectorAll(".episodes li").forEach(function (item) {
         item.hidden = query && item.textContent.toLowerCase().indexOf(query) === -1;
+      });
+      document.querySelectorAll(".year-group").forEach(function (group) {
+        var visible = Array.prototype.some.call(group.querySelectorAll("li"), function (item) { return !item.hidden; });
+        group.hidden = Boolean(query) && !visible;
+        group.open = Boolean(query) && visible;
       });
     });
   </script>

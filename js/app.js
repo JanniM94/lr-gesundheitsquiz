@@ -229,11 +229,33 @@
     return viewLifestyle();
   }
 
-  function episodeItems() {
+  function episodeYear(date) {
+    const match = String(date).match(/(\d{4})/);
+    return match ? match[1] : "Weitere";
+  }
+
+  function episodeItem(episode) {
+    return '<li><a href="blog/' + esc(episode.href) + '"><time>' + esc(episode.date) + "</time>" + esc(episode.title) + "</a></li>";
+  }
+
+  function episodeArchive() {
     const episodes = globalThis.LR_EPISODES || [];
-    return episodes.map(function (episode) {
-      return '<li><a href="blog/' + esc(episode.href) + '"><time>' + esc(episode.date) + "</time>" + esc(episode.title) + "</a></li>";
+    const latest = episodes.slice(0, 5);
+    const years = [];
+    const byYear = {};
+    episodes.slice(5).forEach(function (episode) {
+      const year = episodeYear(episode.date);
+      if (!byYear[year]) {
+        byYear[year] = [];
+        years.push(year);
+      }
+      byYear[year].push(episode);
+    });
+    const groups = years.map(function (year) {
+      const count = byYear[year].length;
+      return '<details class="year-group"><summary>' + esc(year) + '<span>' + count + (count === 1 ? " Folge" : " Folgen") + "</span></summary><ul class=\"episode-list\">" + byYear[year].map(episodeItem).join("") + "</ul></details>";
     }).join("");
+    return '<p class="eyebrow">Zuletzt erschienen</p><ul class="episode-list latest-list">' + latest.map(episodeItem).join("") + '</ul><div class="archive"><p class="eyebrow">Nach Jahren</p>' + groups + "</div>";
   }
 
   function viewWelcome() {
@@ -265,11 +287,11 @@
       "</article></div>" +
       '<section class="folgen" id="folgen">' +
       '<p class="eyebrow">Podcast</p>' +
-      "<h2>Die einzelnen Folgen</h2>" +
-      "<p>Jede Seite übernimmt den veröffentlichten Folgenhinweis, keine wortgetreue Abschrift. Die Aufnahme selbst hörst du auf Spotify.</p>" +
+      "<h2>Die letzten Folgen</h2>" +
+      "<p>Fünf neue Folgen stehen offen. Ältere Folgen liegen nach Jahren darunter. Jede Seite übernimmt den veröffentlichten Folgenhinweis, keine wortgetreue Abschrift.</p>" +
       '<label class="episode-label" for="episode-filter">Folge suchen</label>' +
       '<input class="episode-filter" id="episode-filter" type="search" placeholder="Titel oder Stichwort">' +
-      '<ul class="episode-list">' + episodeItems() + "</ul>" +
+      episodeArchive() +
       "</section></section>"
     );
   }
@@ -737,6 +759,11 @@
       const query = fold(event.target.value);
       app.querySelectorAll(".episode-list li").forEach(function (item) {
         item.hidden = query.length > 0 && fold(item.textContent).indexOf(query) === -1;
+      });
+      app.querySelectorAll(".year-group").forEach(function (group) {
+        const visible = Array.prototype.some.call(group.querySelectorAll("li"), function (item) { return !item.hidden; });
+        group.hidden = query.length > 0 && !visible;
+        group.open = query.length > 0 && visible;
       });
       return;
     }

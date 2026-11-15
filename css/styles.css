@@ -401,6 +401,48 @@ a { color: inherit; }
 
 .episode-list li[hidden] { display: none; }
 
+.archive { margin-top: 36px; }
+
+.year-group {
+  border-top: 1px solid var(--line);
+}
+
+.year-group[hidden] { display: none; }
+
+.year-group summary {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 16px 0;
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  list-style: none;
+}
+
+.year-group summary::-webkit-details-marker { display: none; }
+
+.year-group summary span {
+  margin-left: auto;
+  font-family: var(--font);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.year-group summary::after {
+  content: "+";
+  color: var(--gold);
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.year-group[open] summary::after { content: "–"; }
+
+.year-group .episode-list { margin-top: 0; }
+
 .eyebrow {
   margin: 0 0 14px;
   font-family: var(--font);

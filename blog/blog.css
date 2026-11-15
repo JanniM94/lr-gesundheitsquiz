@@ -177,3 +177,32 @@ input {
 }
 
 .episodes li[hidden] { display: none; }
+
+.year-group {
+  border-top: 1px solid var(--line);
+}
+
+.year-group[hidden] { display: none; }
+
+.year-group summary {
+  display: flex;
+  gap: 16px;
+  padding: 14px 0;
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  list-style: none;
+}
+
+.year-group summary::-webkit-details-marker { display: none; }
+
+.year-group summary span {
+  margin-left: auto;
+  color: var(--gold);
+  font-family: var(--font);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.archive { margin-top: 28px; }
